@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package schedulr.authentication.v1;
+
+option go_package = "github.com/virgiawanly/schedulr-backend/protogen/go/authentication/v1";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+service AuthService {
+  rpc CheckRegisteredEmail(CheckRegisteredEmailRequest) returns (CheckRegisteredEmailResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+}
+
+message Account {
+  string id = 1;
+  string business_id = 2;
+  string email = 3;
+  string password = 4;
+
+  google.protobuf.Timestamp created_at = 100;
+  google.protobuf.Timestamp updated_at = 101;
+  google.protobuf.Timestamp deleted_at = 102;
+}
+
+message CheckRegisteredEmailRequest {
+  string email = 1;
+}
+
+message CheckRegisteredEmailResponse {
+  bool is_exist = 1;
+}
+
+message RegisterRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string password = 4;
+  string phone = 5;
+  string address_1 = 6;
+  string address_2 = 7;
+  string city = 8;
+  string state = 9;
+  string zipcode = 10;
+  string country = 11;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string token_type = 2;
+  google.protobuf.Duration expiry_time = 3;
+}
+
+message RefreshTokenRequest {
+  string token_type = 1;
+  string access_token = 2;
+}
+
+message RefreshTokenResponse {
+  string token_type = 1;
+  string access_token = 2;
+  google.protobuf.Duration expiry_time = 3;
+}
