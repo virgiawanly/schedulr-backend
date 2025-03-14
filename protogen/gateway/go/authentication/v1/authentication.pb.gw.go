@@ -144,7 +144,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/CheckRegisteredEmail", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/CheckRegisteredEmail"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/CheckRegisteredEmail", runtime.WithHTTPPathPattern("/v1/auth/check-registered-email"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -164,7 +164,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Register", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/Register"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Register", runtime.WithHTTPPathPattern("/v1/auth/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -184,7 +184,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Login", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/Login"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Login", runtime.WithHTTPPathPattern("/v1/auth/login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -204,7 +204,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/RefreshToken", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/RefreshToken"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/RefreshToken", runtime.WithHTTPPathPattern("/v1/auth/refresh-token"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -262,7 +262,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/CheckRegisteredEmail", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/CheckRegisteredEmail"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/CheckRegisteredEmail", runtime.WithHTTPPathPattern("/v1/auth/check-registered-email"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -279,7 +279,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Register", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/Register"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Register", runtime.WithHTTPPathPattern("/v1/auth/register"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -296,7 +296,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Login", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/Login"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/Login", runtime.WithHTTPPathPattern("/v1/auth/login"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -313,7 +313,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/RefreshToken", runtime.WithHTTPPathPattern("/schedulr.authentication.v1.AuthService/RefreshToken"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/schedulr.authentication.v1.AuthService/RefreshToken", runtime.WithHTTPPathPattern("/v1/auth/refresh-token"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -330,10 +330,10 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_AuthService_CheckRegisteredEmail_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"schedulr.authentication.v1.AuthService", "CheckRegisteredEmail"}, ""))
-	pattern_AuthService_Register_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"schedulr.authentication.v1.AuthService", "Register"}, ""))
-	pattern_AuthService_Login_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"schedulr.authentication.v1.AuthService", "Login"}, ""))
-	pattern_AuthService_RefreshToken_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"schedulr.authentication.v1.AuthService", "RefreshToken"}, ""))
+	pattern_AuthService_CheckRegisteredEmail_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "auth", "check-registered-email"}, ""))
+	pattern_AuthService_Register_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "auth", "register"}, ""))
+	pattern_AuthService_Login_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "auth", "login"}, ""))
+	pattern_AuthService_RefreshToken_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "auth", "refresh-token"}, ""))
 )
 
 var (

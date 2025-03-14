@@ -6,12 +6,36 @@ option go_package = "github.com/virgiawanly/schedulr-backend/protogen/go/authent
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
+import "proto/google/api/annotations.proto";
 
 service AuthService {
-  rpc CheckRegisteredEmail(CheckRegisteredEmailRequest) returns (CheckRegisteredEmailResponse);
-  rpc Register(RegisterRequest) returns (RegisterResponse);
-  rpc Login(LoginRequest) returns (LoginResponse);
-  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc CheckRegisteredEmail(CheckRegisteredEmailRequest) returns (CheckRegisteredEmailResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/check-registered-email"
+      body: "*"
+    };
+  }
+
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "*"
+    };
+  }
+
+  rpc Login(LoginRequest) returns (LoginResponse)  {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+      body: "*"
+    };
+  }
+
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/refresh-token"
+      body: "*"
+    };
+  }
 }
 
 message Account {
@@ -59,7 +83,8 @@ message LoginRequest {
 message LoginResponse {
   string access_token = 1;
   string token_type = 2;
-  google.protobuf.Duration expiry_time = 3;
+  string refresh_token = 3;
+  google.protobuf.Duration expiry_time = 4;
 }
 
 message RefreshTokenRequest {
