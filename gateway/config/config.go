@@ -10,18 +10,28 @@ type Config struct {
 }
 
 func (c *Config) LoadConfig() error {
-	if err := godotenv.Load(); err != nil {
-		logger.Info("No .env file found, using system environment variables")
+	LoadEnv()
+	c.Server = &ServerConfig{}
+
+	configs := []struct {
+		Name   string
+		Loader func() error
+	}{
+		{"server", c.Server.LoadConfig},
 	}
 
-	if c.Server == nil {
-		c.Server = &ServerConfig{}
-	}
-
-	if err := c.Server.LoadConfig(); err != nil {
-		logger.Errorf("Failed to load server configuration: %v", err)
-		return err
+	for _, cfg := range configs {
+		if err := cfg.Loader(); err != nil {
+			logger.Errorf("Failed to load %s configuration: %v", cfg.Name, err)
+			return err
+		}
 	}
 
 	return nil
+}
+
+func LoadEnv() {
+	if err := godotenv.Load(); err != nil {
+		logger.Info("No .env file found, using system environment variables")
+	}
 }
