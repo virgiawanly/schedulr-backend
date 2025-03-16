@@ -19,14 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserService_FindUserById_FullMethodName               = "/schedulr.user.v1.UserService/FindUserById"
+	UserService_FindUserByAccountId_FullMethodName        = "/schedulr.user.v1.UserService/FindUserByAccountId"
 	UserService_CreateUserFromRegistration_FullMethodName = "/schedulr.user.v1.UserService/CreateUserFromRegistration"
+	UserService_UpdateUserByAccountId_FullMethodName      = "/schedulr.user.v1.UserService/UpdateUserByAccountId"
 )
 
 // UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	FindUserById(ctx context.Context, in *FindUserByIdRequest, opts ...grpc.CallOption) (*FindUserByIdResponse, error)
+	FindUserByAccountId(ctx context.Context, in *FindUserByAccountIdRequest, opts ...grpc.CallOption) (*FindUserByAccountIdResponse, error)
 	CreateUserFromRegistration(ctx context.Context, in *CreateUserFromRegistrationRequest, opts ...grpc.CallOption) (*CreateUserFromRegistrationResponse, error)
+	UpdateUserByAccountId(ctx context.Context, in *UpdateUserByAccountIdRequest, opts ...grpc.CallOption) (*UpdateUserByAccountIdResponse, error)
 }
 
 type userServiceClient struct {
@@ -35,6 +41,26 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) FindUserById(ctx context.Context, in *FindUserByIdRequest, opts ...grpc.CallOption) (*FindUserByIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindUserByIdResponse)
+	err := c.cc.Invoke(ctx, UserService_FindUserById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FindUserByAccountId(ctx context.Context, in *FindUserByAccountIdRequest, opts ...grpc.CallOption) (*FindUserByAccountIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindUserByAccountIdResponse)
+	err := c.cc.Invoke(ctx, UserService_FindUserByAccountId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) CreateUserFromRegistration(ctx context.Context, in *CreateUserFromRegistrationRequest, opts ...grpc.CallOption) (*CreateUserFromRegistrationResponse, error) {
@@ -47,11 +73,24 @@ func (c *userServiceClient) CreateUserFromRegistration(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateUserByAccountId(ctx context.Context, in *UpdateUserByAccountIdRequest, opts ...grpc.CallOption) (*UpdateUserByAccountIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateUserByAccountIdResponse)
+	err := c.cc.Invoke(ctx, UserService_UpdateUserByAccountId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
 type UserServiceServer interface {
+	FindUserById(context.Context, *FindUserByIdRequest) (*FindUserByIdResponse, error)
+	FindUserByAccountId(context.Context, *FindUserByAccountIdRequest) (*FindUserByAccountIdResponse, error)
 	CreateUserFromRegistration(context.Context, *CreateUserFromRegistrationRequest) (*CreateUserFromRegistrationResponse, error)
+	UpdateUserByAccountId(context.Context, *UpdateUserByAccountIdRequest) (*UpdateUserByAccountIdResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -62,8 +101,17 @@ type UserServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServiceServer struct{}
 
+func (UnimplementedUserServiceServer) FindUserById(context.Context, *FindUserByIdRequest) (*FindUserByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUserById not implemented")
+}
+func (UnimplementedUserServiceServer) FindUserByAccountId(context.Context, *FindUserByAccountIdRequest) (*FindUserByAccountIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUserByAccountId not implemented")
+}
 func (UnimplementedUserServiceServer) CreateUserFromRegistration(context.Context, *CreateUserFromRegistrationRequest) (*CreateUserFromRegistrationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserFromRegistration not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateUserByAccountId(context.Context, *UpdateUserByAccountIdRequest) (*UpdateUserByAccountIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserByAccountId not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -86,6 +134,42 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
+func _UserService_FindUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindUserByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FindUserById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_FindUserById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FindUserById(ctx, req.(*FindUserByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FindUserByAccountId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindUserByAccountIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FindUserByAccountId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_FindUserByAccountId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FindUserByAccountId(ctx, req.(*FindUserByAccountIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_CreateUserFromRegistration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateUserFromRegistrationRequest)
 	if err := dec(in); err != nil {
@@ -104,6 +188,24 @@ func _UserService_CreateUserFromRegistration_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateUserByAccountId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserByAccountIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateUserByAccountId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UpdateUserByAccountId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateUserByAccountId(ctx, req.(*UpdateUserByAccountIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -112,8 +214,20 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "FindUserById",
+			Handler:    _UserService_FindUserById_Handler,
+		},
+		{
+			MethodName: "FindUserByAccountId",
+			Handler:    _UserService_FindUserByAccountId_Handler,
+		},
+		{
 			MethodName: "CreateUserFromRegistration",
 			Handler:    _UserService_CreateUserFromRegistration_Handler,
+		},
+		{
+			MethodName: "UpdateUserByAccountId",
+			Handler:    _UserService_UpdateUserByAccountId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

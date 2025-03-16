@@ -1,0 +1,19 @@
+services:
+  schedulr-authn-db:
+    image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U schedulr -d schedulr_authn" ]
+      interval: 5s
+      retries: 10
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "54321:5432"
+    networks:
+      - schedulr_authn_network
+
+networks:
+  schedulr_authn_network:
+    driver: bridge

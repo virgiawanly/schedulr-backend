@@ -13,7 +13,7 @@ mkdir -p "$GATEWAYOUTDIR"
 # Find and compile all .proto files recursively
 find "$PROTODIR" -name "*.proto" | while read -r entry; do
   echo "Processing: $entry"
-  protoc --proto_path="$PROTODIR" \
+  protoc --proto_path="$PROTODIR" --proto_path="$WORKDIR" \
     --go_out="$OUTDIR" --go_opt=paths=source_relative \
     --go-grpc_out="$OUTDIR" --go-grpc_opt=paths=source_relative \
     --grpc-gateway_out "$GATEWAYOUTDIR" \

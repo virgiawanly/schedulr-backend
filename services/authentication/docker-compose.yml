@@ -1,0 +1,40 @@
+services:
+  schedulr-authn-db:
+    image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U schedulr -d schedulr_authn" ]
+      interval: 5s
+      retries: 10
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - schedulr_authn_network
+
+  schedulr-authn-service:
+    build:
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    depends_on:
+      schedulr-authn-db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "grpc_health_probe", "-addr=localhost:8080"]
+      retries: 3
+      interval: 60s
+      start_period: 5s
+      timeout: 30s
+    networks:
+      - schedulr_authn_network
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_SSL_MODE=${DB_SSL_MODE}
+
+networks:
+  schedulr_authn_network:
+    driver: bridge

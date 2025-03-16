@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY,
+  account_id UUID,
+  business_id UUID,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  phone VARCHAR(25),
+  address_1 VARCHAR(255),
+  address_2 VARCHAR(255),
+  city VARCHAR(150),
+  state VARCHAR(150),
+  zipcode VARCHAR(20),
+  country VARCHAR(100),
+  labour_cost DECIMAL(10, 2),
+  language VARCHAR(50),
+  image VARCHAR(255),
+  created_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ
+);

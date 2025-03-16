@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package schedulr.common;
+
+option go_package = "github.com/virgiawanly/schedulr-backend/protogen/go/common";
+
+message PaginationRequest {
+  uint64 size = 1 [json_name = "size"];
+  uint64 page = 2 [json_name = "page"];
+}
+
+message PaginationMetadata {
+  uint64 size = 1;
+  uint64 page = 2;
+  uint64 total = 3;
+  uint64 totalPage = 4 [json_name = "total_page"];
+}

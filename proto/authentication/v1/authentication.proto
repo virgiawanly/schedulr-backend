@@ -69,10 +69,14 @@ message RegisterRequest {
   string state = 9;
   string zipcode = 10;
   string country = 11;
+
+  optional string business_name = 12;
+  optional string business_company_size = 13;
+  optional string business_field = 14;
 }
 
 message RegisterResponse {
-  string user_id = 1;
+  string account_id = 1;
 }
 
 message LoginRequest {

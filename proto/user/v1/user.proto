@@ -7,7 +7,10 @@ option go_package = "github.com/virgiawanly/schedulr-backend/protogen/go/user/v1
 import "google/protobuf/timestamp.proto";
 
 service UserService {
+  rpc FindUserById(FindUserByIdRequest) returns (FindUserByIdResponse);
+  rpc FindUserByAccountId(FindUserByAccountIdRequest) returns (FindUserByAccountIdResponse);
   rpc CreateUserFromRegistration(CreateUserFromRegistrationRequest) returns (CreateUserFromRegistrationResponse);
+  rpc UpdateUserByAccountId(UpdateUserByAccountIdRequest) returns (UpdateUserByAccountIdResponse);
 }
 
 message User {
@@ -29,23 +32,55 @@ message User {
 
   google.protobuf.Timestamp created_at = 100;
   google.protobuf.Timestamp updated_at = 101;
-  google.protobuf.Timestamp deleted_at = 102;
+  optional google.protobuf.Timestamp deleted_at = 102;
+}
+
+message FindUserByIdRequest {
+  string id = 1;
+}
+
+message FindUserByIdResponse {
+  User user = 1;
+}
+
+message FindUserByAccountIdRequest {
+  string account_id = 1 [json_name = "account_id"];
+}
+
+message FindUserByAccountIdResponse {
+  User user = 1;
 }
 
 message CreateUserFromRegistrationRequest {
-  string business_id = 1;
-  string account_id = 2;
-  string first_name = 3;
-  string last_name = 4;
-  string phone = 5;
-  string address_1 = 6;
-  string address_2 = 7;
-  string city = 8;
-  string state = 9;
-  string zipcode = 10;
-  string country = 11;
+  string account_id = 1 [json_name = "account_id"];
+  string first_name = 2 [json_name = "first_name"];
+  optional string last_name = 3 [json_name = "last_name"];
+  optional string phone = 4;
+  optional string address_1 = 5 [json_name = "address_1"];
+  optional string address_2 = 6 [json_name = "address_2"];
+  optional string city = 7;
+  optional string state = 8;
+  optional string zipcode = 9;
+  optional string country = 10;
 }
 
 message CreateUserFromRegistrationResponse {
+  User user = 1;
+}
+
+message UpdateUserByAccountIdRequest {
+  string account_id = 1 [json_name = "account_id"];
+  string first_name = 2 [json_name = "first_name"];
+  optional string last_name = 3 [json_name = "last_name"];
+  optional string phone = 4;
+  optional string address_1 = 5 [json_name = "address_1"];
+  optional string address_2 = 6 [json_name = "address_2"];
+  optional string city = 7;
+  optional string state = 8;
+  optional string zipcode = 9;
+  optional string country = 10;
+}
+
+message UpdateUserByAccountIdResponse {
   User user = 1;
 }
