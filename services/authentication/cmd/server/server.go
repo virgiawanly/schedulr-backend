@@ -98,7 +98,7 @@ func (s *Server) setupGrpcServer() error {
 	)
 
 	accountRepository := pg.NewAccountRepository(s.db)
-	authUsecase := usecase.NewAuthUsecase(accountRepository, grpcClient.UserClient, jwtConfig)
+	authUsecase := usecase.NewAuthUsecase(accountRepository, grpcClient.UserClient, grpcClient.BusinessClient, jwtConfig)
 	authHandler := handler.NewAuthHandler(authUsecase)
 	authenticationV1.RegisterAuthServiceServer(s.grpcServer, authHandler)
 

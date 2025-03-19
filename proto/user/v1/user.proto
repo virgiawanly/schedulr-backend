@@ -18,20 +18,20 @@ message User {
   string business_id = 2;
   string account_id = 3;
   string first_name = 4;
-  string last_name = 5;
-  string phone = 6;
-  string address_1 = 7;
-  string address_2 = 8;
-  string city = 9;
-  string state = 10;
-  string zipcode = 11;
-  string country = 12;
-  string image_path = 13;
-  string language = 14;
-  double labour_cost = 15;
+  optional string last_name = 5;
+  optional string phone = 6;
+  optional string address_1 = 7;
+  optional string address_2 = 8;
+  optional string city = 9;
+  optional string state = 10;
+  optional string zipcode = 11;
+  optional string country = 12;
+  optional string image_path = 13;
+  optional string language = 14;
+  optional double labour_cost = 15;
 
-  google.protobuf.Timestamp created_at = 100;
-  google.protobuf.Timestamp updated_at = 101;
+  optional google.protobuf.Timestamp created_at = 100;
+  optional google.protobuf.Timestamp updated_at = 101;
   optional google.protobuf.Timestamp deleted_at = 102;
 }
 
@@ -48,7 +48,7 @@ message FindUserByAccountIdRequest {
 }
 
 message FindUserByAccountIdResponse {
-  User user = 1;
+  optional User user = 1;
 }
 
 message CreateUserFromRegistrationRequest {

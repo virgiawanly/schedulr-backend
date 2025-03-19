@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY,
-  account_id UUID,
-  business_id UUID,
-  first_name VARCHAR(255),
+  account_id UUID NOT NULL,
+  business_id UUID NOT NULL,
+  first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255),
   phone VARCHAR(25),
   address_1 VARCHAR(255),

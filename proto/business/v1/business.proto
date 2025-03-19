@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package schedulr.business.v1;
+
+option go_package = "github.com/virgiawanly/schedulr-backend/protogen/go/business/v1";
+
+import "google/protobuf/timestamp.proto";
+
+service BusinessService {
+  rpc FindBusinessById(FindBusinessByIdRequest) returns (FindBusinessByIdResponse);
+  rpc CreateBusinessFromRegistration(CreateBusinessFromRegistrationRequest) returns (CreateBusinessFromRegistrationResponse);
+}
+
+message Business {
+  string id = 1;
+  string name = 2;
+  string industry = 3;
+  optional string company_size = 4 [json_name = "company_size"];
+  optional string logo = 5;
+  optional string phone = 6;
+  optional string email = 7;
+  optional string website = 8;
+  optional string address_1 = 9 [json_name = "address_1"];
+  optional string address_2 = 10 [json_name = "address_2"];
+  optional string city = 11;
+  optional string state = 12;
+  optional string zipcode = 13;
+  optional string country = 14;
+
+  optional google.protobuf.Timestamp created_at = 100;
+  optional google.protobuf.Timestamp updated_at = 101;
+  optional google.protobuf.Timestamp deleted_at = 102;
+}
+
+message FindBusinessByIdRequest {
+  string id = 1;
+}
+
+message FindBusinessByIdResponse {
+  Business business = 1;
+}
+
+message CreateBusinessFromRegistrationRequest {
+  string name = 1;
+  string industry = 2;
+  optional string company_size = 3 [json_name = "company_size"];
+  optional string address_1 = 4 [json_name = "address_1"];
+  optional string address_2 = 5 [json_name = "address_2"];
+  optional string city = 6;
+  optional string state = 7;
+  optional string zipcode = 8;
+  optional string country = 9;
+}
+
+message CreateBusinessFromRegistrationResponse {
+  Business business = 1;
+}

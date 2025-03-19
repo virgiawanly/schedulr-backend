@@ -1,0 +1,19 @@
+services:
+  schedulr-business-db:
+    image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U schedulr -d schedulr_business" ]
+      interval: 5s
+      retries: 10
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "54322:5432"
+    networks:
+      - schedulr_business_network
+
+networks:
+  schedulr_business_network:
+    driver: bridge

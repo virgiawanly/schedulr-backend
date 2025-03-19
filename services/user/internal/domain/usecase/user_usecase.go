@@ -37,14 +37,14 @@ func (u *UserUsecase) CreateUserFromRegistration(ctx context.Context, req dto.Cr
 		BusinessID: businessIdHeaders[0],
 		AccountID:  req.AccountID,
 		FirstName:  req.FirstName,
-		LastName:   *req.LastName,
-		Phone:      *req.Phone,
-		Address1:   *req.Address1,
-		Address2:   *req.Address2,
-		City:       *req.City,
-		State:      *req.State,
-		Zipcode:    *req.Zipcode,
-		Country:    *req.Country,
+		LastName:   req.LastName,
+		Phone:      req.Phone,
+		Address1:   req.Address1,
+		Address2:   req.Address2,
+		City:       req.City,
+		State:      req.State,
+		Zipcode:    req.Zipcode,
+		Country:    req.Country,
 	}
 
 	err := u.userRepository.Create(ctx, &user, nil)

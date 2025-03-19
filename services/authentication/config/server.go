@@ -20,7 +20,8 @@ type CircuitBreaker struct {
 }
 
 type Service struct {
-	User string `mapstructure:"user"`
+	User     string `mapstructure:"user"`
+	Business string `mapstructure:"business"`
 }
 
 func (srv *ServerConfig) LoadConfig() error {
@@ -30,7 +31,8 @@ func (srv *ServerConfig) LoadConfig() error {
 		"cb.half_state_max_requests":   5,
 		"cb.half_state_reset_interval": "60s",
 		"cb.open_state_timeout":        "30s",
-		"service.user":                 "localhost:8002",
+		"service.business":             "localhost:8002",
+		"service.user":                 "localhost:8003",
 	}
 
 	envBindings := map[string]string{
@@ -40,6 +42,7 @@ func (srv *ServerConfig) LoadConfig() error {
 		"cb.half_state_reset_interval": "CB_HALF_STATE_RESET_INTERVAL",
 		"cb.open_state_timeout":        "CB_OPEN_STATE_TIMEOUT",
 		"service.user":                 "SERVICE_USER_ADDRESS",
+		"service.business":             "SERVICE_BUSINESS_ADDRESS",
 	}
 
 	return sharedConfig.LoadConfig(srv, defaults, envBindings)

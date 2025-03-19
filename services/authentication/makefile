@@ -1,4 +1,4 @@
-SERVICE_NAME = authentication-service
+SERVICE_NAME = user-service
 OUTPUT_BIN = bin/$(SERVICE_NAME)
 
 MIGRATE_DB_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable

@@ -7,11 +7,13 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/virgiawanly/schedulr-backend/gateway/config"
-	authenticationV1Gw "github.com/virgiawanly/schedulr-backend/protogen/gateway/go/authentication/v1"
-	userV1Gw "github.com/virgiawanly/schedulr-backend/protogen/gateway/go/user/v1"
 	"github.com/virgiawanly/schedulr-backend/shared/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	authenticationV1Gw "github.com/virgiawanly/schedulr-backend/protogen/gateway/go/authentication/v1"
+	businessV1Gw "github.com/virgiawanly/schedulr-backend/protogen/gateway/go/business/v1"
+	userV1Gw "github.com/virgiawanly/schedulr-backend/protogen/gateway/go/user/v1"
 )
 
 type Server struct {
@@ -42,6 +44,10 @@ func (s *Server) registerServices() error {
 
 	if err := authenticationV1Gw.RegisterAuthServiceHandlerFromEndpoint(ctx, s.mux, s.config.Server.Service.Authentication, opts); err != nil {
 		return fmt.Errorf("failed to register Authentication Service: %v", err)
+	}
+
+	if err := businessV1Gw.RegisterBusinessServiceHandlerFromEndpoint(ctx, s.mux, s.config.Server.Service.Business, opts); err != nil {
+		return fmt.Errorf("failed to register Business Service: %v", err)
 	}
 
 	if err := userV1Gw.RegisterUserServiceHandlerFromEndpoint(ctx, s.mux, s.config.Server.Service.User, opts); err != nil {

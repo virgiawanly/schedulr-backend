@@ -34,28 +34,6 @@ func NewUserClient(conn grpc.ClientConnInterface, conf *config.CircuitBreaker) c
 	}
 }
 
-func (u *userClient) FindUserById(ctx context.Context, businessId *string, reqDto *dto.FindUserByIdRequestDTO) (*dto.FindUserByIdResponseDTO, error) {
-	if businessId != nil {
-		ctx = metadata.AppendToOutgoingContext(ctx, "business_id", *businessId)
-	}
-
-	req := &userV1.FindUserByIdRequest{Id: reqDto.ID}
-
-	result, err := u.cb.Execute(func() (interface{}, error) {
-		return u.client.FindUserById(ctx, req)
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	resp, ok := result.(*userV1.FindUserByIdResponse)
-	if !ok {
-		return nil, fmt.Errorf("unexpected response type: %T", result)
-	}
-
-	return &dto.FindUserByIdResponseDTO{User: resp.User}, nil
-}
-
 func (u *userClient) CreateUserFromRegistration(ctx context.Context, businessId *string, reqDto *dto.CreateUserFromRegistrationRequestDTO) (*dto.CreateUserFromRegistrationResponseDTO, error) {
 	if businessId != nil {
 		ctx = metadata.AppendToOutgoingContext(ctx, "business_id", *businessId)
@@ -87,37 +65,4 @@ func (u *userClient) CreateUserFromRegistration(ctx context.Context, businessId 
 	}
 
 	return &dto.CreateUserFromRegistrationResponseDTO{User: resp.User}, nil
-}
-
-func (u *userClient) UpdateUserByAccountId(ctx context.Context, businessId *string, reqDto *dto.UpdateUserByAccountIdRequestDTO) (*dto.UpdateUserByAccountIdResponseDTO, error) {
-	if businessId != nil {
-		ctx = metadata.AppendToOutgoingContext(ctx, "business_id", *businessId)
-	}
-
-	req := &userV1.UpdateUserByAccountIdRequest{
-		AccountId: reqDto.AccountID,
-		FirstName: reqDto.FirstName,
-		LastName:  reqDto.LastName,
-		Phone:     reqDto.Phone,
-		Address_1: reqDto.Address1,
-		Address_2: reqDto.Address2,
-		City:      reqDto.City,
-		State:     reqDto.State,
-		Zipcode:   reqDto.Zipcode,
-		Country:   reqDto.Country,
-	}
-
-	result, err := u.cb.Execute(func() (interface{}, error) {
-		return u.client.UpdateUserByAccountId(ctx, req)
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	resp, ok := result.(*userV1.UpdateUserByAccountIdResponse)
-	if !ok {
-		return nil, fmt.Errorf("unexpected response type: %T", result)
-	}
-
-	return &dto.UpdateUserByAccountIdResponseDTO{User: resp.User}, nil
 }

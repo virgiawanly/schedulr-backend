@@ -10,8 +10,9 @@ import (
 )
 
 type GrpcClient struct {
-	UserClient  clientPort.UserClientPort
-	connections []*grpc.ClientConn
+	UserClient     clientPort.UserClientPort
+	BusinessClient clientPort.BusinessClientPort
+	connections    []*grpc.ClientConn
 }
 
 func (e *GrpcClient) Close() {
@@ -22,10 +23,11 @@ func (e *GrpcClient) Close() {
 	}
 }
 
-func NewClientWithConnection(userConn *grpc.ClientConn, conf *config.CircuitBreaker) *GrpcClient {
+func NewClientWithConnection(userConn *grpc.ClientConn, businessConn *grpc.ClientConn, conf *config.CircuitBreaker) *GrpcClient {
 	return &GrpcClient{
-		UserClient:  NewUserClient(userConn, conf),
-		connections: []*grpc.ClientConn{userConn},
+		UserClient:     NewUserClient(userConn, conf),
+		BusinessClient: NewBusinessClient(businessConn, conf),
+		connections:    []*grpc.ClientConn{userConn},
 	}
 }
 
@@ -35,5 +37,10 @@ func NewClientWithConfig(conf *config.Service, breaker *config.CircuitBreaker, o
 		return nil, err
 	}
 
-	return NewClientWithConnection(userConn, breaker), nil
+	businessConn, err := grpc.NewClient(conf.Business, options...)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewClientWithConnection(userConn, businessConn, breaker), nil
 }

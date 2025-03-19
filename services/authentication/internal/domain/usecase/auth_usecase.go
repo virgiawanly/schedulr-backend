@@ -2,11 +2,13 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
+	"gorm.io/gorm"
 
 	"schedulr-backend/services/authentication/internal/domain/dto"
 	"schedulr-backend/services/authentication/internal/domain/entity"
@@ -23,13 +25,15 @@ import (
 type AuthUsecase struct {
 	accountRepository repository.AccountRepository
 	userClient        clientPort.UserClientPort
+	businessClient    clientPort.BusinessClientPort
 	jwtConfig         *jwt.JWTConfig
 }
 
-func NewAuthUsecase(accountRepo repository.AccountRepository, userClient clientPort.UserClientPort, jwtConfig *jwt.JWTConfig) *AuthUsecase {
+func NewAuthUsecase(accountRepo repository.AccountRepository, userClient clientPort.UserClientPort, businessClient clientPort.BusinessClientPort, jwtConfig *jwt.JWTConfig) *AuthUsecase {
 	return &AuthUsecase{
 		accountRepository: accountRepo,
 		userClient:        userClient,
+		businessClient:    businessClient,
 		jwtConfig:         jwtConfig,
 	}
 }
@@ -51,44 +55,44 @@ func (u *AuthUsecase) Register(ctx context.Context, req dto.RegisterRequestDTO) 
 		return nil, sharedError.WrapError(codes.AlreadyExists, sharedError.ErrEmailAlreadyRegistered)
 	}
 
+	tx := u.accountRepository.BeginTransaction()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	createBusinessRequest := mapper.ToCreateBusinessFromRegistrationRequestDTO(req)
+	businessResponse, err := u.businessClient.CreateBusinessFromRegistration(ctx, &createBusinessRequest)
+	if err != nil {
+		return nil, sharedError.WrapError(codes.Internal, err)
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, sharedError.WrapError(codes.Internal, err)
 	}
 
 	now := time.Now()
-	businessId := uuid.New().String() // @todo: get business id from newly created account
-
 	account := entity.Account{
 		ID:         uuid.New().String(),
-		BusinessID: businessId,
+		BusinessID: businessResponse.Business.ID,
 		Email:      req.Email,
 		Password:   string(hashedPassword),
 		CreatedAt:  &now,
 		UpdatedAt:  &now,
 	}
 
-	tx := u.accountRepository.BeginTransaction()
-	defer tx.Rollback()
-
 	err = u.accountRepository.Create(ctx, &account, tx)
 	if err != nil {
 		return nil, sharedError.WrapError(codes.Internal, err)
 	}
 
-	_, err = u.userClient.CreateUserFromRegistration(ctx, &account.BusinessID, &dto.CreateUserFromRegistrationRequestDTO{
-		AccountID: account.ID,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-		Phone:     req.Phone,
-		Address1:  req.Address1,
-		Address2:  req.Address2,
-		City:      req.City,
-		State:     req.State,
-		Zipcode:   req.Zipcode,
-		Country:   req.Country,
-	})
+	// Create User in User Service
+	createUserRequestDto := mapper.ToCreateUserFromRegistrationRequestDTO(req, account.ID)
+	_, err = u.userClient.CreateUserFromRegistration(ctx, &account.BusinessID, &createUserRequestDto)
 	if err != nil {
+		// _ = u.businessClient.DeleteBusiness(ctx, businessResponse.Business.ID)
 		return nil, sharedError.WrapError(codes.Internal, err)
 	}
 
@@ -103,8 +107,12 @@ func (u *AuthUsecase) Register(ctx context.Context, req dto.RegisterRequestDTO) 
 func (u *AuthUsecase) Login(ctx context.Context, req dto.LoginRequestDTO) (*dto.LoginResponseDTO, *sharedError.AppError) {
 	account, err := u.accountRepository.FindByEmail(ctx, req.Email)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, sharedError.NewAppError(codes.Unauthenticated, "account not found")
+		}
 		return nil, sharedError.WrapError(codes.Internal, err)
 	}
+
 	if account == nil {
 		return nil, sharedError.NewAppError(codes.Unauthenticated, "account not found")
 	}
